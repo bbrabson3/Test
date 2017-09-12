@@ -1,0 +1,55 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package circlesfx;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class CirclesFX extends Application {
+    
+    @Override
+    public void start(Stage primaryStage) {
+        int r1 = (int)(Math.random() * 300);
+        int r2 = (int)(Math.random() * 300);
+        Circle c1 = new Circle(r1, r2, 15);
+        int r3 = (int)(Math.random() * 300);
+        int r4 = (int)(Math.random() * 300);
+        Circle c2 = new Circle(r3, r4, 15);
+        Pane root = new Pane();
+        Line l = new Line(r1, r2, r3, r4);
+        int distance = (int) Math.sqrt((r3 - r1) * (r3 - r1) + (r4 - r2) * (r4 - r2));
+        Label d = new Label("" + distance);
+        root.getChildren().addAll(c1, c2, l, d);
+        
+        Scene scene = new Scene(root, 300, 300);
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
