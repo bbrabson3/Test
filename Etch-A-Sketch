@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package DrawFX;
+
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class DrawFX extends Application {
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Text t = new Text(20,20,"a");
+        Pane root = new Pane();
+        root.getChildren().add(t);
+        
+        Scene scene = new Scene(root, 300, 250);
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        root.requestFocus();
+        
+        root.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case UP: root.getChildren().add(new Line(t.getX(),t.getY(),t.getX(), t.getY() - 5));
+                t.setY(t.getY() - 5);
+                break;
+                case DOWN: root.getChildren().add(new Line(t.getX(),t.getY(),t.getX(), t.getY() + 5));
+                t.setY(t.getY() + 5);
+                break;
+                case LEFT: root.getChildren().add(new Line(t.getX(),t.getY(),t.getX() - 5, t.getY()));
+                t.setX(t.getX() - 5);
+                break;
+                case RIGHT: root.getChildren().add(new Line(t.getX(),t.getY(),t.getX() + 5, t.getY()));
+                t.setX(t.getX() + 5);
+                break;
+                default: t.setText(e.getCharacter().toUpperCase());
+            }
+        });
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
