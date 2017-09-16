@@ -1,0 +1,75 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package circledragfx;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class CircleDragFX extends Application {
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Circle c1 = new Circle(40, 40, 10);
+        Circle c2 = new Circle(120, 150, 10);
+        Line l = new Line(40, 40, 120, 150);
+        double d = Math.sqrt((c1.getCenterX()-c2.getCenterX()) * (c1.getCenterX()-c2.getCenterX()) + (c1.getCenterY()-c2.getCenterY()) * (c1.getCenterY()-c2.getCenterY()));
+        Text t = new Text((c1.getCenterX() + c2.getCenterX())/ 2,(c1.getCenterY() + c2.getCenterY())/ 2, "" + (int)d);
+        
+        Pane root = new Pane();
+        root.getChildren().addAll(c1, c2, l, t);
+        
+        Scene scene = new Scene(root, 300, 250);
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        root.setOnMouseDragged(e -> {
+            double centerx = c1.getCenterX();
+            double centery = c1.getCenterY();
+            if(Math.sqrt((centerx-e.getX()) * (centerx-e.getX()) + (centery-e.getY()) * (centery-e.getY())) < 10){
+                c1.setCenterX(e.getX());
+                c1.setCenterY(e.getY());
+                l.setStartX(c1.getCenterX());
+                l.setStartY(c1.getCenterY());
+                double d1 = Math.sqrt((c1.getCenterX()-c2.getCenterX()) * (c1.getCenterX()-c2.getCenterX()) + (c1.getCenterY()-c2.getCenterY()) * (c1.getCenterY()-c2.getCenterY()));
+                t.setText("" + (int)d1);
+                t.setX((c1.getCenterX() + c2.getCenterX())/2);
+                t.setY((c1.getCenterY() + c2.getCenterY())/2);
+            }
+            if(Math.sqrt((c2.getCenterX()-e.getX()) * (c2.getCenterX()-e.getX()) + (c2.getCenterY()-e.getY()) * (c2.getCenterY()-e.getY())) < 10){
+                c2.setCenterX(e.getX());
+                c2.setCenterY(e.getY());
+                l.setEndX(c2.getCenterX());
+                l.setEndY(c2.getCenterY());
+                double d1 = Math.sqrt((c1.getCenterX()-c2.getCenterX()) * (c1.getCenterX()-c2.getCenterX()) + (c1.getCenterY()-c2.getCenterY()) * (c1.getCenterY()-c2.getCenterY()));
+                t.setText("" + (int)d1);
+                t.setX((c1.getCenterX() + c2.getCenterX())/2);
+                t.setY((c1.getCenterY() + c2.getCenterY())/2);
+            }
+        });
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
