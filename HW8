@@ -16,14 +16,14 @@ public class HW8 {
 		){
 			String s;
 			while(in.hasNext()){
-				s = in.next();
+				s = in.nextLine();
 				for(int i = 0; i < s.length(); i++){
 					if(s.charAt(i) == 'a')
 						out.print('*');
 					else
 						out.print(s.charAt(i));
 				}
-				out.print(" ");
+				out.println("");
 			}
 			temp.renameTo(new File("demo.txt"));
 		}
