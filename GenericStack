@@ -1,0 +1,47 @@
+
+class GenericStack<E> {
+	private E[] arr = ((E[])new Object[10]);
+	int last;
+	int size = 0;
+	GenericStack(){}
+	public int getSize(){
+		return size;
+	}
+	public E peek(){
+		if(size == 0)
+			return null;
+		else
+			return arr[size - 1];
+	}
+	public E pop(){
+		if(size == 0) return null;
+		else{
+			return arr[size - 1];
+			arr.remove(size - 1);
+		}
+	}
+	public void push(E o){
+		if(size == 0){
+			arr[0] = o;
+			size++;
+		}
+		else{
+			size++;
+			arr[size - 1] = o;
+			
+		}
+	}
+	public boolean isEmpty(){
+		if(size == 0) return true;
+		else
+			return false;
+	}
+	public String toString(){
+		String s = "[";
+		for(int i = 0; i < size - 1; i++){
+			s += arr[i] + ", ";
+		}
+		s += arr[size - 1] + "]";
+		return s;
+	}
+}
