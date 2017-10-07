@@ -1,0 +1,34 @@
+import java.util.*;
+public class BracketBalance {
+
+	public static void main(String[] args) {
+		String balanced = "{[()]}";
+		String unbalanced = "([{[]]})";
+		System.out.println(isBalanced(balanced));
+		System.out.println(isBalanced(unbalanced));
+	}
+	
+	public static boolean isBalanced(String s){
+		boolean b = false;
+		Stack<Integer> open = new Stack<>();
+		Queue<Integer> close = new LinkedList<>();
+		for(int i = 0; i < s.length(); i++){
+			if(s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[')
+				open.push((int)s.charAt(i));
+			else
+				close.offer((int)s.charAt(i));
+		}
+		while(!open.isEmpty() && !close.isEmpty()){
+			int o = open.pop();
+			int c = close.poll();
+			if((o == '{' && c == '}') || (o == '(' && c == ')') || (o == '[' && c == ']'))
+				b = true;
+			else{
+				b = false;
+				break;
+			}
+		}
+		return b;
+	}
+
+}
