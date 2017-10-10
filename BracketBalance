@@ -2,33 +2,29 @@ import java.util.*;
 public class BracketBalance {
 
 	public static void main(String[] args) {
-		String balanced = "{[()]}";
-		String unbalanced = "([{[]]})";
-		System.out.println(isBalanced(balanced));
-		System.out.println(isBalanced(unbalanced));
+		System.out.println(isBalanced("([)]"));
+		System.out.println(isBalanced("[]]"));
+		System.out.println(isBalanced("{{}[]}"));
 	}
 	
 	public static boolean isBalanced(String s){
-		boolean b = false;
-		Stack<Integer> open = new Stack<>();
-		Queue<Integer> close = new LinkedList<>();
+		Stack<Character> st = new Stack<>();
+		char ch;
 		for(int i = 0; i < s.length(); i++){
-			if(s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[')
-				open.push((int)s.charAt(i));
-			else
-				close.offer((int)s.charAt(i));
-		}
-		while(!open.isEmpty() && !close.isEmpty()){
-			int o = open.pop();
-			int c = close.poll();
-			if((o == '{' && c == '}') || (o == '(' && c == ')') || (o == '[' && c == ']'))
-				b = true;
-			else{
-				b = false;
-				break;
+			ch = s.charAt(i);
+			if(ch == '(' || ch == '{' || ch == '[') st.push(ch);
+			else if(ch == ')'){
+				if(st.isEmpty() || st.pop() != '(') return false;
+			}
+			else if(ch == '}'){
+				if(st.isEmpty() || st.pop() != '{') return false;
+			}
+			else if(ch == ']'){
+				if(st.isEmpty() || st.pop() != '[') return false;
 			}
 		}
-		return b;
+		return st.isEmpty();
 	}
 
 }
+//din't pass test cases: ({}[]) - true []] -false {{} - false
