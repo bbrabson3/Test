@@ -1,8 +1,13 @@
+/*
+ID: bbrabson
+LANG: JAVA
+TASK: gift1
+ */
 import java.util.*;
 import java.io.*;
-public class GreedyGiftGivers {
+public class gift1 {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		Map<String, Integer> map = new HashMap<>();
 		File file = new File("gift1.in");
@@ -14,28 +19,30 @@ public class GreedyGiftGivers {
 			name = in.nextLine();
 			map.put(name, 0);
 		}
-		String giver = in.nextLine(); // name of giver
-		int money = in.nextInt();  // money taken from account
-		int people = in.nextInt(); // number of people given to
 		
-		for(int i = 0; i < nameCount - 1; i++){
+		
+		for(int i = 0; i < nameCount; i++){
+			String giver = in.next(); // name of giver
+			int money = in.nextInt();  // money taken from account
+			int people = in.nextInt(); // number of people given to
 			if(people > 0){
-				map.put(giver, map.get(giver) + -money + (money % people));
+				map.put(giver, map.get(giver) - money + (money % people));
 				for(int j = 0; j < people; j++){
 					String given = in.next(); // name of person given to
 					map.put(given, map.get(given) + money / people);
 				}
 			}
-			giver = in.next();
-			money = in.nextInt();
-			people = in.nextInt();
 		}
+		
 		Scanner in2 = new Scanner(file);
 		in2.next();
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("gift1.out")));
 		for(int i = 0; i < nameCount; i++){
 			String name2 = in2.next();
-			System.out.println(name2 + " " + map.get(name2));
+			out.println(name2 + " " + map.get(name2));
 		}
+		out.close();
+		System.out.println(map);
 	}
 
 }
