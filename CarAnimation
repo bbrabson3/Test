@@ -1,0 +1,105 @@
+package car;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+/**
+ *
+ * @author heathernew
+ */
+public class Car extends Application {
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Rectangle r = new Rectangle(0, 180, 50, 10);
+        r.setFill(Color.BLUE);
+        Polygon p = new Polygon();
+        ObservableList<Double> list = p.getPoints();
+        list.addAll(10.0, 180.0, 20.0, 170.0, 30.0, 170.0, 40.0, 180.0);
+        p.setFill(Color.BLUEVIOLET);
+        Circle c1 = new Circle(10, 190, 5);
+        c1.setFill(Color.AQUAMARINE);
+        Circle c2 = new Circle(40, 190, 5);
+        c2.setFill(Color.AQUA);
+        
+        Pane root = new Pane();
+        root.getChildren().addAll(r, p, c1, c2);
+        
+        Timeline animation = new Timeline(
+                new KeyFrame(Duration.millis(30), e -> {
+                    
+              c1.setCenterX(c1.getCenterX() + 5);
+              if(c1.getCenterX() == 300)
+                  c1.setCenterX(-100);
+              
+              c2.setCenterX(c2.getCenterX() + 5);
+              if(c2.getCenterX() == 300)
+                  c2.setCenterX(-100);
+              
+              p.setLayoutX(p.getLayoutX() + 5);
+              if(p.getLayoutX() == 300)
+                  p.setLayoutX(-100);
+              
+              r.setLayoutX(r.getLayoutX() + 5);
+              if(r.getLayoutX() == 300)
+                  r.setLayoutX(-100);
+              
+        }));
+        
+        
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.play();
+                
+        Scene scene = new Scene(root, 300, 250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        scene.setOnMouseClicked(e -> {
+            if (animation.getStatus() == Animation.Status.PAUSED)
+                animation.play();
+            else
+                animation.pause();
+        });
+        
+        scene.setOnKeyPressed(e -> {
+            switch(e.getCode()){
+                case UP: 
+                    if(animation.getRate() < 10)
+                        animation.setRate(animation.getRate() + 1);
+                    break;
+                case DOWN: 
+                    if(animation.getRate() > 1)
+                        animation.setRate(animation.getRate() - 1);
+                    break;
+                default:
+                    if (animation.getStatus() == Animation.Status.PAUSED)
+                        animation.play();
+                    else
+                        animation.pause();
+                    
+            }
+        });
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
