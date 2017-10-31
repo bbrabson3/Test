@@ -46,26 +46,26 @@ public class Graph extends Application {
             root.getChildren().addAll(l, l2);
         }
         
-        Timeline animation = new Timeline(new KeyFrame(Duration.millis(10), e -> {
+        Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             int x = (int) c.getCenterX();
             int y = (int) c.getCenterY();
             int oldx = x;
             int oldy = y;
             switch((int)(Math.random() * 4) + 1){
                 case 1: 
-                    if(available[(x + 25)/25][y / 25] && x < 400 & y < 400)
+                    if(available[(x + 25)/25][y / 25] && x < 400 && y < 400)
                         x += 25;
                     break;
                 case 2: 
-                    if(available[(x - 25)/25][y / 25] && x < 400 & y < 400)
+                    if(available[(x - 25)/25][y / 25] && x < 400 && y < 400)
                         x -= 25;
                     break;
                 case 3: 
-                    if(available[(x)/25][(y + 25) / 25] && x < 400 & y < 400)
+                    if(available[(x)/25][(y + 25) / 25] && x < 400 && y < 400)
                         y += 25;
                     break;
                 case 4: 
-                    if(available[(x)/25][(y - 25) / 25] && x < 400 & y < 400)
+                    if(available[(x)/25][(y - 25) / 25] && x < 400 && y < 400)
                         y -= 25;
                     break;
             }
