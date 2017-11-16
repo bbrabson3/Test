@@ -1,0 +1,137 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sudoku;
+
+import java.util.ArrayList;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+
+/**
+ *
+ * @author bbrabson
+ */
+public class Sudoku extends Application {
+    static int[][] puzzle = new int[9][9];
+    TextField[][] tfList = new TextField[9][9];
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
+        Pane root = new Pane();
+        VBox vbox = new VBox();
+        Button btn = new Button("solve");
+        for(int i = 0; i < 9; i++){
+            HBox hbox = new HBox(9);
+            for(int j = 0; j < 9; j++){
+                TextField tf = new TextField("0");
+                tf.setMaxWidth(30);
+                hbox.getChildren().add(tf);
+                tfList[i][j] = tf;
+            }
+            vbox.getChildren().add(hbox);
+        }
+        vbox.getChildren().add(btn);
+        root.getChildren().addAll(vbox);
+        
+        
+        Scene scene = new Scene(root, 450, 450);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        btn.setOnAction(e -> {
+            for(int i = 0; i < 9; i++){
+                for(int j = 0; j < 9; j++){
+                    String s = tfList[i][j].getText();
+                    int k = Integer.parseInt(s);
+                    puzzle[i][j] = k;
+                }
+            }
+            
+            solve();
+            
+            for(int i = 0; i < 9; i++){
+                for(int j = 0; j < 9; j++){
+                    tfList[i][j].setText("" + puzzle[i][j]);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    
+    static boolean solve() {
+		//search for first non-zero cell
+		boolean found = false;
+		int emptyI = -1, emptyJ = -1;
+		for(int i = 0; i < puzzle.length && !found; i++){
+			for(int j = 0; j < puzzle.length && !found; j++){
+				if(puzzle[i][j] == 0){
+					emptyI = i;
+					emptyJ = j;
+					found = true;
+				}
+			}
+		}
+		if(!found) return true; //solved!
+		else{
+			for(int num = 1; num <= 9; num++){
+				if(isOK(num, emptyI, emptyJ)){
+					puzzle[emptyI][emptyJ] = num;
+					if(solve())
+						return true;
+					puzzle[emptyI][emptyJ] = 0;
+				}
+			}
+		}
+		return false;
+	}
+	
+	static boolean isOK(int num, int I, int J) {
+		//check row
+		for(int j = 0; j < puzzle.length; j++){
+			if (j != J && puzzle[I][j] == num)
+				return false;
+		}
+		//check column
+		
+		for(int i = 0; i < puzzle.length; i++){
+			if(i != I && puzzle[i][J] == num)
+				return false;
+		}
+		
+		
+		//check square
+		int cornerI = I / 3 * 3, cornerJ = J / 3 * 3;
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				int currI = cornerI + i;
+				int currJ = cornerJ + j;
+				if (currI != I && currJ != J){
+						if(puzzle[currI][currJ] == num){
+							return false;
+						}
+				}
+			}
+		}
+		return true;
+	}
+    
+}
