@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 
 /**
  *
- * @author bbrabson
+ * @author heathernew
  */
 public class Sudoku extends Application {
     static int[][] puzzle = new int[9][9];
