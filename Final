@@ -1,0 +1,326 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package finalproject;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class FinalProject extends Application {
+    
+    static int[][] a = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    };
+    Button[][] bList = new Button[4][4];
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new Pane();
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(10));
+        Text text = new Text("0h h1");
+        vbox.getChildren().add(text);
+        Button btn = new Button("solve");
+        for(int i = 0; i < 4; i++){
+            HBox hbox = new HBox(4);
+            hbox.setPadding(new Insets(5));
+            for(int j = 0; j < 4; j++){
+                Button b = new Button("  ");
+                b.setMaxWidth(30);
+                hbox.getChildren().add(b);
+                bList[i][j] = b;
+            }
+            vbox.getChildren().add(hbox);
+        }
+        HBox hbox = new HBox(2);
+        Button btn2 = new Button("reset");
+        hbox.getChildren().addAll(btn, btn2);
+        vbox.getChildren().addAll(hbox, new Text("r = red, b = blue"));
+        root.getChildren().addAll(vbox);
+        
+        Scene scene = new Scene(root, 250, 250);
+        primaryStage.setTitle("0h h1");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        btn2.setOnAction(e -> {
+            for(int i = 0; i < a.length; i++){
+                for(int j = 0; j < a.length; j++){
+                    bList[i][j].setText("  ");
+                    a[i][j] = 0;
+                }
+            }
+        });
+        
+        for(int i = 0; i < bList.length; i++){
+            for(int j = 0; j < bList.length; j++){
+                Button b = bList[i][j];
+                b.setOnAction(e -> {
+                    if(b.getText() == "  "){
+                        b.setText("r ");
+                    }
+                    else if(b.getText() == "r "){
+                        b.setText("b");
+                    }
+                    else {
+                        b.setText("  ");
+                    }
+                });
+            }
+        }
+        
+        btn.setOnAction(e -> {
+            for(int i = 0; i < bList.length; i++){
+                for(int j = 0; j < bList.length; j++){
+                    if(bList[i][j].getText().equals("r "))
+                        a[i][j] = 1;
+                    else if(bList[i][j].getText().equals("b"))
+                        a[i][j] = 2;
+                    else if(bList[i][j].getText().equals("  "))
+                        a[i][j] = 0;
+                }
+            }
+            solve();
+            
+            
+            for(int i = 0; i < bList.length; i++){
+                for(int j = 0; j < bList.length; j++){
+                    if(a[i][j] == 1)
+                        bList[i][j].setText("r ");
+                    else
+                        bList[i][j].setText("b");
+                }
+            }
+        });   
+    }
+    
+    static void solve(){
+		while(!isFull()){
+			for(int i = 0; i < a.length; i++){
+				for(int j = 0; j < a[0].length; j++){
+					two(i, j);
+					colCheck(i, j);
+					rowCheck(i, j);
+					sameRow(i, j);
+					sameCol(i, j);
+				}
+			}
+		}
+	}
+	
+	// checks for two tiles in a row/column
+	static void two(int i, int j){
+		if(a[i][j] > 0){
+			 if(i == 0 && a[i + 1][j] == a[i][j] && a[i + 2][j] == 0){
+				 a[i + 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j == 0 && a[i][j + 1] == a[i][j] && a[i][j + 2] == 0){
+				 a[i][j + 2] = opposite(a[i][j]);
+			 }
+			 else if(i == a.length - 1 && a[i - 1][j] == a[i][j] && a[i - 2][j] == 0){
+				 a[i - 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j == a[0].length - 1 && a[i][j - 1] == a[i][j] && a[i][j - 2] == 0){
+				 a[i][j - 2] = opposite(a[i][j]);
+			 }
+			 if(i == 1 && a[i + 1][j] == a[i][j] && a[i + 2][j] == 0){
+				 a[i + 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j == 1 && a[i][j + 1] == a[i][j] && a[i][j + 2] == 0){
+				 a[i][j + 2] = opposite(a[i][j]);
+			 }
+			 else if(i == a.length - 2 && a[i - 1][j] == a[i][j] && a[i - 2][j] == 0){
+				 a[i - 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j == a[0].length - 2 && a[i][j - 1] == a[i][j] && a[i][j - 2] == 0){
+				 a[i][j - 2] = opposite(a[i][j]);
+			 }
+		}
+	}
+	
+	// checks for two of any color in a row
+	static void rowCheck(int i, int j){
+		int redCount = 0;
+		int blueCount = 0;
+		for(int k = 0; k < a[0].length; k++){
+			if(a[i][k] == 1)
+				redCount++;
+			if(a[i][k] == 2)
+				blueCount++;
+		}
+		if(redCount == a.length/2){
+			for(int k = 0; k < a[0].length; k++){
+				if(a[i][k] == 0)
+					a[i][k] = 2;
+			}
+		}
+		if(blueCount == a.length/2){
+			for(int k = 0; k < a[0].length; k++){
+				if(a[i][k] == 0)
+					a[i][k] = 1;
+			}
+		}
+		
+	}
+	
+	// checks for two of any color in a column
+	static void colCheck(int i, int j){
+		int redCount = 0;
+		int blueCount = 0;
+		for(int k = 0; k < a.length; k++){
+			if(a[k][j] == 1)
+				redCount++;
+			if(a[k][j] == 2)
+				blueCount++;
+		}
+		if(redCount == a.length/2){
+			for(int k = 0; k < a.length; k++){
+				if(a[k][j] == 0)
+					a[k][j] = 2;
+			}
+		}
+		if(blueCount == a.length/2){
+			for(int k = 0; k < a.length; k++){
+				if(a[k][j] == 0)
+					a[k][j] = 1;
+			}
+		}
+		
+	}
+	
+	// checks if a row with two spaces missing is similar to a row that is full
+	static void sameRow(int i, int j){
+		if(a[i][j] == 0 && filledRow(i) == a.length - 2){
+			for(int k = 0; k < a.length; k++){
+				int[] arr = getMissingRow(i);
+				if(k != i){
+					if(compareRows(i, k, arr)){
+						a[i][arr[0]] = opposite(a[k][arr[0]]);
+						a[i][arr[1]] = opposite(a[k][arr[1]]);
+					}
+				}
+			}
+		}
+	}
+	
+	// checks if a column with two spaces missing is similar to a column that is full
+	static void sameCol(int i, int j){
+		if(a[i][j] == 0 && filledCol(j) == a.length - 2){
+			for(int k = 0; k < a.length; k++){
+				int[] arr = getMissingCol(j);
+				if(k != j){
+					if(compareCols(j, k, arr)){
+						a[arr[0]][j] = opposite(a[arr[0]][k]);
+						a[arr[1]][j] = opposite(a[arr[1]][k]);
+					}
+				}
+			}
+		}
+	}
+	
+	// finds opposite color
+	static int opposite(int i){
+		if(i == 1)
+			return 2;
+		else
+			return 1;
+	}
+	
+	static boolean isFull(){
+		boolean b = true;
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < a[0].length; j++){
+				if(a[i][j] == 0)
+					b = false;
+			}
+		}
+		return b;
+	}
+	
+	static int filledRow(int i){
+		int count = 0;
+		for(int k = 0; k < a[0].length; k++){
+			if(a[i][k] == 1 || a[i][k] == 2)
+				count++;
+		}
+		return count;
+	}
+	
+	static int filledCol(int j){
+		int count = 0;
+		for(int k = 0; k < a.length; k++){
+			if(a[k][j] == 1 || a[k][j] == 2)
+				count++;
+		}
+		return count;
+	}
+	
+	static boolean compareRows(int first, int second, int[] arr){
+		for(int i = 0; i < a[0].length; i++){
+			if(i != arr[0] && i != arr[1] && a[first][i] != a[second][i]){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	static boolean compareCols(int first, int second, int[] arr){
+		for(int j = 0; j < a.length; j++){
+			if(j != arr[0] && j != arr[1] && a[j][first] != a[j][second]){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	static int[] getMissingRow(int i){
+		int[] arr = new int[2];
+		int count = 0;
+		for(int k = 0; k < a.length; k++){
+			if(a[i][k] == 0){
+				arr[count] = k;
+				count++;
+			}
+		}
+		return arr;
+	}
+	
+	static int[] getMissingCol(int j){
+		int[] arr = new int[2];
+		int count = 0;
+		for(int k = 0; k < a.length; k++){
+			if(a[k][j] == 0){
+				arr[count] = k;
+				count++;
+			}
+		}
+		return arr;
+	}
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
