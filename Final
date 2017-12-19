@@ -6,6 +6,7 @@
 package finalproject;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,13 +26,10 @@ import javafx.stage.Stage;
  */
 public class FinalProject extends Application {
     
-    static int[][] a = {
-        {0,0,0,0},
-        {0,0,0,0},
-        {0,0,0,0},
-        {0,0,0,0}
-    };
-    Button[][] bList = new Button[4][4];
+    static int size = 8;
+    
+    static int[][] a = new int[size][size];
+    Button[][] bList = new Button[size][size];
     
     @Override
     public void start(Stage primaryStage) {
@@ -41,14 +39,15 @@ public class FinalProject extends Application {
         Text text = new Text("0h h1");
         vbox.getChildren().add(text);
         Button btn = new Button("solve");
-        for(int i = 0; i < 4; i++){
-            HBox hbox = new HBox(4);
+        for(int i = 0; i < size; i++){
+            HBox hbox = new HBox(size);
             hbox.setPadding(new Insets(5));
-            for(int j = 0; j < 4; j++){
+            for(int j = 0; j < size; j++){
                 Button b = new Button("  ");
                 b.setMaxWidth(30);
                 hbox.getChildren().add(b);
                 bList[i][j] = b;
+                a[i][j] = 0;
             }
             vbox.getChildren().add(hbox);
         }
@@ -58,7 +57,7 @@ public class FinalProject extends Application {
         vbox.getChildren().addAll(hbox, new Text("r = red, b = blue"));
         root.getChildren().addAll(vbox);
         
-        Scene scene = new Scene(root, 250, 250);
+        Scene scene = new Scene(root, size * 50, size * 50 + 50);
         primaryStage.setTitle("0h h1");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -111,8 +110,18 @@ public class FinalProject extends Application {
                         bList[i][j].setText("b");
                 }
             }
-        });   
+        });
+        
+        
+        
+        
     }
+    
+    
+    
+    
+    
+    
     
     static void solve(){
 		while(!isFull()){
@@ -143,7 +152,7 @@ public class FinalProject extends Application {
 			 else if(j == a[0].length - 1 && a[i][j - 1] == a[i][j] && a[i][j - 2] == 0){
 				 a[i][j - 2] = opposite(a[i][j]);
 			 }
-			 if(i == 1 && a[i + 1][j] == a[i][j] && a[i + 2][j] == 0){
+			 else if(i == 1 && a[i + 1][j] == a[i][j] && a[i + 2][j] == 0){
 				 a[i + 2][j] = opposite(a[i][j]);
 			 }
 			 else if(j == 1 && a[i][j + 1] == a[i][j] && a[i][j + 2] == 0){
@@ -154,6 +163,54 @@ public class FinalProject extends Application {
 			 }
 			 else if(j == a[0].length - 2 && a[i][j - 1] == a[i][j] && a[i][j - 2] == 0){
 				 a[i][j - 2] = opposite(a[i][j]);
+			 }
+			 else if(i < a.length - 2 && a[i][j] == a[i + 1][j] && a[i + 2][j] == 0){
+				 a[i + 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j < a.length - 2 && a[i][j] == a[i][j + 1] && a[i][j + 2] == 0){
+				 a[i][j + 2] = opposite(a[i][j]);
+			 }
+			 else if(i > 1 && a[i][j] == a[i - 1][j] && a[i - 2][j] == 0){
+				 a[i - 2][j] = opposite(a[i][j]);
+			 }
+			 else if(j > 1 && a[i][j] == a[i][j - 1] && a[i][j - 2] == 0){
+				 a[i][j - 2] = opposite(a[i][j]);
+			 }
+			 else if(i == 0 && a[i + 2][j] == a[i][j] && a[i + 1][j] == 0){
+				 a[i + 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j == 0 && a[i][j + 2] == a[i][j] && a[i][j + 1] == 0){
+				 a[i][j + 1] = opposite(a[i][j]);
+			 }
+			 else if(i == a.length - 1 && a[i - 2][j] == a[i][j] && a[i - 1][j] == 0){
+				 a[i - 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j == a[0].length - 1 && a[i][j - 2] == a[i][j] && a[i][j - 1] == 0){
+				 a[i][j - 1] = opposite(a[i][j]);
+			 }
+			 else if(i == 1 && a[i + 2][j] == a[i][j] && a[i + 1][j] == 0){
+				 a[i + 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j == 1 && a[i][j + 2] == a[i][j] && a[i][j + 1] == 0){
+				 a[i][j + 1] = opposite(a[i][j]);
+			 }
+			 else if(i == a.length - 2 && a[i - 2][j] == a[i][j] && a[i - 1][j] == 0){
+				 a[i - 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j == a[0].length - 2 && a[i][j - 2] == a[i][j] && a[i][j - 1] == 0){
+				 a[i][j - 1] = opposite(a[i][j]);
+			 }
+			 else if(i < a.length - 2 && a[i][j] == a[i + 2][j] && a[i + 1][j] == 0){
+				 a[i + 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j < a.length - 2 && a[i][j] == a[i][j + 2] && a[i][j + 1] == 0){
+				 a[i][j + 1] = opposite(a[i][j]);
+			 }
+			 else if(i > 1 && a[i][j] == a[i - 2][j] && a[i - 1][j] == 0){
+				 a[i - 1][j] = opposite(a[i][j]);
+			 }
+			 else if(j > 1 && a[i][j] == a[i][j - 2] && a[i][j - 1] == 0){
+				 a[i][j - 1] = opposite(a[i][j]);
 			 }
 		}
 	}
@@ -317,10 +374,18 @@ public class FinalProject extends Application {
 		return arr;
 	}
     
+    
+    
+    
+    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
+    
+    
+    
 }
