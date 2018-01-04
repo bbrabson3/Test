@@ -3,7 +3,7 @@ public class MinSteps {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(countMinSteps(2));
+		System.out.println(countMinSteps(41));
 	}
 	
 	static int countMinSteps(int n){
