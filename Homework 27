@@ -1,0 +1,118 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package queensanimated;
+
+import java.util.Arrays;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class QueensAnimated extends Application {
+    static int n;
+    static String s = "";
+    static int[] a = new int[100];
+    static Rectangle[] rec = new Rectangle[100];
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
+        Pane root = new Pane();
+        VBox vbox = new VBox();
+        HBox hbox1 = new HBox();
+        
+        for(int i = 0; i < 100; i++)
+            a[i] = (int) (Math.random() * 100);
+        Arrays.sort(a);
+        
+        TextField tf = new TextField("Enter ur favorite  #");
+        Button btn = new Button("enter");
+        
+        int count = 0;
+        for(int i = 0; i < 10; i++){
+            HBox hbox = new HBox();
+            for(int j = 0; j < 10; j++){
+                rec[count] = new Rectangle(20, 20);
+                rec[count].setFill(Color.AQUAMARINE);
+                rec[count].setStroke(Color.BLACK);
+                StackPane st = new StackPane();
+                st.getChildren().addAll(rec[count], new Label("" + a[count]));
+                hbox.getChildren().add(st);
+                count++;
+            }
+            vbox.getChildren().add(hbox);
+        }
+        
+        Thread th = new Thread(() -> {
+            int min = 0;
+            int max = a.length - 1;
+            while (min <= max) {
+                int mid = min + (max - min) / 2;
+                if(n < a[mid]) {
+                    for(int i = mid; i <= max; i++){
+                        rec[i].setFill(Color.RED);
+                        try{ Thread.sleep(50);} catch (InterruptedException ex) {}
+                    }
+                    max = mid - 1;
+                }
+                else if (n > a[mid]){
+                    for(int i = min; i < mid; i++){
+                        rec[i].setFill(Color.RED);
+                        try{ Thread.sleep(50);} catch (InterruptedException ex) {}
+                    }
+                    min = mid + 1;
+                }
+                else if(n == a[mid])
+                    rec[mid].setFill(Color.CHARTREUSE); 
+            }
+        });
+        
+        btn.setOnAction(e -> {
+            s = tf.getText();
+            n = Integer.parseInt(s);
+            if(Arrays.binarySearch(a, n) < 0)
+                tf.setText("not here");
+            else
+                th.start();
+        });
+        
+        hbox1.getChildren().addAll(tf, btn);
+        vbox.getChildren().addAll(hbox1);
+        root.getChildren().addAll(vbox);
+        
+        Scene scene = new Scene(root, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> {
+            Platform.exit();
+            System.exit(0);
+        });
+        
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
