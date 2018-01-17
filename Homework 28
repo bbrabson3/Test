@@ -1,0 +1,117 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package animatedsort;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author heathernew
+ */
+public class AnimatedSort extends Application {
+    
+    static int SIZE = 50;
+    static int[] a = new int[SIZE];
+    static Rectangle[] rec = new Rectangle[SIZE];
+    static Thread th;
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Button btn = new Button("start");
+        
+        Pane root = new Pane();
+        
+        for(int i = 0; i < SIZE; i++){
+            a[i] = (int)(Math.random() * 49) + 1;
+            rec[i] = new Rectangle(3, 3 * a[i]);
+            root.getChildren().add(rec[i]);
+            rec[i].setX((3 * i) - 200);
+            rec[i].setY(-200);
+            rec[i].setFill(Color.DARKCYAN);
+            rec[i].getTransforms().add(new Rotate(180));
+        }
+        Scene scene = new Scene(root, 300, 300);
+        primaryStage.setTitle("Animated Sort");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> {
+            System.exit(0);
+        });
+        
+        th = new Thread(() -> {
+            try {
+                sort(a);
+            } catch (InterruptedException ex) {}
+        });
+        
+        btn.setOnAction(e -> {
+            th.start();
+        });
+        btn.setLayoutX(10);
+        btn.setLayoutY(10);
+        root.getChildren().add(btn);
+        
+        Button btn2 = new Button("reset");
+        btn2.setLayoutX(80);
+        btn2.setLayoutY(10);
+        
+        btn2.setOnAction(e -> {
+            for(int i = 0; i < SIZE; i++){
+                a[i] = (int)(Math.random() * 49) + 1;
+                rec[i].setHeight(3 * a[i]);
+            }
+            th = new Thread(() -> {
+                try {
+                sort(a);
+            } catch (InterruptedException ex) {}
+            });
+        });
+        
+        root.getChildren().add(btn2);
+        
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    void sort(int arr[]) throws InterruptedException
+    {
+        int n = arr.length;
+ 
+        for (int i = 0; i < n-1; i++)
+        {
+            int min = i;
+            for (int j = i + 1; j < n; j++)
+                if (arr[j] > arr[min]){
+                    min = j;
+                }
+ 
+            Thread.sleep(50);
+            int temp = arr[min];
+            int tempr = (int) rec[min].getHeight();
+            arr[min] = arr[i];
+            rec[min].setHeight(rec[i].getHeight());
+            arr[i] = temp;
+            rec[i].setHeight(tempr);
+        }
+    }
+    
+}
