@@ -1,0 +1,108 @@
+import java.util.ArrayList;
+
+public class BinaryTree<E> {
+	
+	public ArrayList<TreeNode<E>> getLeaves() {
+		return getLeaves(root);
+	}
+	
+	private ArrayList<TreeNode<E>> getLeaves(TreeNode<E> curr) {
+		ArrayList<TreeNode<E>> list = new ArrayList<>();
+		if(curr == null) return list;
+		if(curr.left == null && curr.right == null)
+			list.add(curr);
+		list.addAll(getLeaves(curr.left));
+		list.addAll(getLeaves(curr.right));
+		return list;
+	}
+	
+	private TreeNode<E> root;
+	
+	public int size() {
+		return size(root);
+	}
+	
+	public int size(TreeNode<E> curr) {
+		if(curr == null) return 0;
+		return 1 + size(curr.left) + size(curr.right);
+	}
+	
+	public int emptyBranches(TreeNode<E> curr) {
+		if(curr == null) return 1;
+		return emptyBranches(curr.left) + emptyBranches (curr.right);
+	}
+	
+	private int emptyBranches() {
+		return emptyBranches(root);
+	}
+	
+	public int countLeaves() {
+		return countLeaves(root);
+	}
+	
+	public int countLeaves(TreeNode<E> curr) {
+		if(curr == null) return 0;
+		if(curr.left == null && curr.right == null) return 1;
+		return countLeaves(curr.right) + countLeaves(curr.left);
+	}
+	
+	public int countLeftNodes() {
+		if(size() == 0) return -1;
+		return countLeftNodes(root);
+	}
+	
+	public int countLeftNodes(TreeNode<E> curr){
+		if(curr == null) return 0;
+		if(curr.left != null) return 1 + countLeftNodes(curr.left) + countLeftNodes(curr.right);
+		if(curr.right != null) return countLeftNodes(curr.left) + countLeftNodes(curr.right);
+		return 0;
+	}
+	
+	public static void main(String[] args) {
+		BinaryTree<Integer> t1 = new BinaryTree();
+		t1.root = new TreeNode(1);
+		t1.root.left = new TreeNode(2);
+		t1.root.right = new TreeNode(3);
+		System.out.println("size: " + t1.size());
+		System.out.println("Empty Branches: " + t1.emptyBranches());
+		System.out.println("Leaves: " + t1.countLeaves());
+		System.out.println("Leaves: " + t1.getLeaves());
+		System.out.println("Lefts: " + t1.countLeftNodes());
+		System.out.println();
+		
+		BinaryTree<Integer> t2 = new BinaryTree();
+		System.out.println("size: " + t2.size());
+		System.out.println("Empty Branches: " + t2.emptyBranches());
+		System.out.println("Leaves: " + t2.countLeaves());
+		System.out.println("Leaves: " + t2.getLeaves());
+		System.out.println("Lefts: " + t2.countLeftNodes());
+		System.out.println();
+		
+		BinaryTree<Character> t3 = new BinaryTree();
+		t3.root = new TreeNode<>('a');
+		t3.root.left = new TreeNode('b');
+		t3.root.left.left = new TreeNode<>('c');
+		t3.root.left.right = new TreeNode<>('d');
+		t3.root.left.right.right = new TreeNode('e');
+		System.out.println("size: " + t3.size());
+		System.out.println("Empty Branches: " + t3.emptyBranches());
+		System.out.println("Leaves: " + t3.countLeaves());
+		System.out.println("Leaves: " + t3.getLeaves());
+		System.out.println("Lefts: " + t3.countLeftNodes());
+		System.out.println();
+	}
+	
+	static class TreeNode<E> {
+		E data;
+		TreeNode<E> left, right;
+		TreeNode (E data) {
+			this.data = data;
+		}
+		
+		@Override
+		public String toString() {
+			return data + "";
+		}
+	}
+	
+}
